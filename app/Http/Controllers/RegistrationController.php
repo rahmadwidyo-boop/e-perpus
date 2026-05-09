@@ -67,13 +67,10 @@ class RegistrationController extends Controller
             'school_id' => $school->id,
         ]);
 
-        // Login dulu agar bisa kirim email verifikasi
+        // Login user
         Auth::login($user);
 
-        // Kirim email verifikasi
-        $user->sendEmailVerificationNotification();
-
-        return redirect()->route('verification.notice')
-            ->with('success', 'Pendaftaran berhasil! Silakan cek email Anda untuk verifikasi akun.');
+        return redirect()->route('dashboard')
+            ->with('success', 'Pendaftaran berhasil! Selamat datang di E-Perpustakaan.');
     }
 }
