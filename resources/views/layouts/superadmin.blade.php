@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'E-Perpustakaan') - E-Perpustakaan Sekolah</title>
-    <!-- Bootstrap 5 -->
+    <title>@yield('title', 'Super Admin') - E-Perpustakaan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
-    <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --sidebar-width: 260px;
             --primary: #1e3a5f;
             --primary-light: #2d5a8e;
+            --sidebar-bg: #0d1f33;
             --accent: #f0a500;
         }
         body {
@@ -26,7 +24,7 @@
         .sidebar {
             width: var(--sidebar-width);
             min-height: 100vh;
-            background: var(--primary);
+            background: var(--sidebar-bg);
             position: fixed;
             top: 0; left: 0;
             z-index: 1000;
@@ -36,7 +34,7 @@
         }
         .sidebar-brand {
             padding: 1.5rem 1.25rem;
-            border-bottom: 1px solid rgba(255,255,255,.1);
+            border-bottom: 1px solid rgba(255,255,255,.08);
         }
         .sidebar-brand h5 {
             color: #fff;
@@ -45,24 +43,34 @@
             font-size: 1rem;
         }
         .sidebar-brand small {
-            color: rgba(255,255,255,.6);
-            font-size: .75rem;
+            color: rgba(255,255,255,.5);
+            font-size: .72rem;
+        }
+        .sidebar-badge {
+            background: var(--accent);
+            color: #fff;
+            font-size: .65rem;
+            font-weight: 700;
+            padding: .15rem .45rem;
+            border-radius: 4px;
+            text-transform: uppercase;
+            letter-spacing: .05em;
         }
         .sidebar-nav {
             padding: 1rem 0;
             flex: 1;
         }
         .sidebar-nav .nav-label {
-            color: rgba(255,255,255,.4);
-            font-size: .7rem;
+            color: rgba(255,255,255,.35);
+            font-size: .68rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: .08em;
             padding: .5rem 1.25rem .25rem;
         }
         .sidebar-nav .nav-link {
-            color: rgba(255,255,255,.75);
-            padding: .6rem 1.25rem;
+            color: rgba(255,255,255,.7);
+            padding: .65rem 1.25rem;
             display: flex;
             align-items: center;
             gap: .75rem;
@@ -73,7 +81,7 @@
         .sidebar-nav .nav-link:hover,
         .sidebar-nav .nav-link.active {
             color: #fff;
-            background: rgba(255,255,255,.1);
+            background: rgba(255,255,255,.08);
             border-left: 3px solid var(--accent);
             padding-left: calc(1.25rem - 3px);
         }
@@ -84,7 +92,7 @@
         }
         .sidebar-footer {
             padding: 1rem 1.25rem;
-            border-top: 1px solid rgba(255,255,255,.1);
+            border-top: 1px solid rgba(255,255,255,.08);
         }
         /* Main content */
         .main-wrapper {
@@ -123,28 +131,23 @@
             align-items: center;
             gap: 1rem;
             box-shadow: 0 2px 8px rgba(0,0,0,.06);
-            min-height: 90px;
         }
         .stat-card .icon-box {
-            width: 48px; height: 48px;
+            width: 52px; height: 52px;
             border-radius: 12px;
             display: flex; align-items: center; justify-content: center;
-            font-size: 1.3rem;
+            font-size: 1.4rem;
             flex-shrink: 0;
         }
         .stat-card .stat-value {
-            font-size: 1.3rem;
+            font-size: 1.6rem;
             font-weight: 700;
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            line-height: 1;
         }
         .stat-card .stat-label {
-            font-size: .75rem;
+            font-size: .8rem;
             color: #6c757d;
             margin-top: .2rem;
-            line-height: 1.3;
         }
         /* Table */
         .table-card {
@@ -171,10 +174,6 @@
             vertical-align: middle;
             font-size: .875rem;
         }
-        /* Badge status */
-        .badge-dipinjam   { background: #fff3cd; color: #856404; }
-        .badge-dikembalikan { background: #d1e7dd; color: #0f5132; }
-        .badge-terlambat  { background: #f8d7da; color: #842029; }
         /* Responsive */
         @media (max-width: 768px) {
             .sidebar { transform: translateX(-100%); }
@@ -195,58 +194,40 @@
             </div>
             <div>
                 <h5>E-Perpustakaan</h5>
-                <small>Sistem Perpustakaan Sekolah</small>
+                <small>Panel Super Admin</small>
             </div>
+        </div>
+        <div class="mt-2">
+            <span class="sidebar-badge">Super Admin</span>
         </div>
     </div>
 
     <div class="sidebar-nav">
-        <div class="nav-label">Menu Utama</div>
-        <a href="{{ route('dashboard') }}" class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}">
+        <div class="nav-label">Manajemen Platform</div>
+        <a href="{{ route('superadmin.dashboard') }}" class="nav-link {{ request()->routeIs('superadmin.dashboard') ? 'active' : '' }}">
             <i class="bi bi-speedometer2"></i> Dashboard
         </a>
-
-        <div class="nav-label mt-2">Manajemen Data</div>
-        <a href="{{ route('books.index') }}" class="nav-link {{ request()->routeIs('books.*') ? 'active' : '' }}">
-            <i class="bi bi-journal-bookmark-fill"></i> Data Buku
+        <a href="{{ route('superadmin.schools.index') }}" class="nav-link {{ request()->routeIs('superadmin.schools.*') ? 'active' : '' }}">
+            <i class="bi bi-building"></i> Sekolah
         </a>
-        <a href="{{ route('students.index') }}" class="nav-link {{ request()->routeIs('students.*') ? 'active' : '' }}">
-            <i class="bi bi-people-fill"></i> Data Siswa
-        </a>
-        <a href="{{ route('students.import.form') }}" class="nav-link {{ request()->routeIs('students.import*') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-arrow-up"></i> Import Siswa
-        </a>
-
-        <div class="nav-label mt-2">Transaksi</div>
-        <a href="{{ route('loans.index') }}" class="nav-link {{ request()->routeIs('loans.*') ? 'active' : '' }}">
-            <i class="bi bi-arrow-left-right"></i> Peminjaman
-        </a>
-        <a href="{{ route('loans.create') }}" class="nav-link {{ request()->routeIs('loans.create') ? 'active' : '' }}">
-            <i class="bi bi-plus-circle-fill"></i> Pinjam Buku
-        </a>
-        <a href="{{ route('fines.index') }}" class="nav-link {{ request()->routeIs('fines.*') ? 'active' : '' }}">
-            <i class="bi bi-cash-coin"></i> Denda
-        </a>
-
-        <div class="nav-label mt-2">Laporan</div>
-        <a href="{{ route('reports.index') }}" class="nav-link {{ request()->routeIs('reports.*') ? 'active' : '' }}">
-            <i class="bi bi-file-earmark-spreadsheet-fill"></i> Laporan & Export
+        <a href="{{ route('superadmin.payments.index') }}" class="nav-link {{ request()->routeIs('superadmin.payments.*') ? 'active' : '' }}">
+            <i class="bi bi-credit-card-fill"></i> Pembayaran
         </a>
     </div>
 
     <div class="sidebar-footer">
         <div class="d-flex align-items-center gap-2 mb-2">
             <div style="width:32px;height:32px;background:var(--accent);border-radius:50%;display:flex;align-items:center;justify-content:center;">
-                <i class="bi bi-person-fill text-white" style="font-size:.85rem;"></i>
+                <i class="bi bi-shield-fill-check text-white" style="font-size:.85rem;"></i>
             </div>
             <div>
                 <div style="color:#fff;font-size:.8rem;font-weight:600;">{{ Auth::user()->name }}</div>
-                <div style="color:rgba(255,255,255,.5);font-size:.7rem;">Administrator</div>
+                <div style="color:rgba(255,255,255,.45);font-size:.7rem;">Super Administrator</div>
             </div>
         </div>
         <form action="{{ route('logout') }}" method="POST">
             @csrf
-            <button type="submit" class="btn btn-sm w-100" style="background:rgba(255,255,255,.1);color:#fff;border:none;">
+            <button type="submit" class="btn btn-sm w-100" style="background:rgba(255,255,255,.08);color:#fff;border:none;">
                 <i class="bi bi-box-arrow-right me-1"></i> Logout
             </button>
         </form>
@@ -261,42 +242,15 @@
             <button class="btn btn-sm d-md-none" id="sidebarToggle" style="border:none;background:none;">
                 <i class="bi bi-list fs-5"></i>
             </button>
-            <h6 class="page-title">@yield('page-title', 'Dashboard')</h6>
+            <h6 class="page-title">@yield('page-title', 'Super Admin')</h6>
         </div>
         <div class="d-flex align-items-center gap-2">
             <span class="badge" style="background:#e8f0fe;color:var(--primary);font-size:.75rem;">
                 <i class="bi bi-calendar3 me-1"></i>{{ now()->translatedFormat('d F Y') }}
             </span>
-            @auth
-                @php
-                    $school = Auth::user()->school;
-                @endphp
-                @if($school)
-                    @php
-                        $daysLeft = $school->daysRemaining();
-                        $subStatus = $school->subscription_status;
-                    @endphp
-                    @if(in_array($subStatus, ['expired', 'suspended']))
-                        <a href="{{ route('subscription.info') }}" class="badge text-decoration-none" style="background:#f8d7da;color:#842029;font-size:.75rem;">
-                            <i class="bi bi-exclamation-triangle-fill me-1"></i>Langganan Habis
-                        </a>
-                    @elseif($daysLeft <= 7)
-                        <a href="{{ route('subscription.info') }}" class="badge text-decoration-none" style="background:#f8d7da;color:#842029;font-size:.75rem;">
-                            <i class="bi bi-clock-fill me-1"></i>
-                            @if($subStatus === 'trial') Trial: {{ $daysLeft }} hari
-                            @else Aktif: {{ $daysLeft }} hari
-                            @endif
-                        </a>
-                    @else
-                        <a href="{{ route('subscription.info') }}" class="badge text-decoration-none" style="background:#d1e7dd;color:#0f5132;font-size:.75rem;">
-                            <i class="bi bi-check-circle-fill me-1"></i>
-                            @if($subStatus === 'trial') Trial: {{ $daysLeft }} hari
-                            @else Aktif: {{ $daysLeft }} hari
-                            @endif
-                        </a>
-                    @endif
-                @endif
-            @endauth
+            <span class="badge" style="background:#fff3cd;color:#856404;font-size:.75rem;">
+                <i class="bi bi-shield-fill-check me-1"></i>Super Admin
+            </span>
         </div>
     </div>
 
@@ -321,11 +275,8 @@
     </div>
 </div>
 
-<!-- Bootstrap JS -->
-<script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Sidebar toggle mobile
     document.getElementById('sidebarToggle')?.addEventListener('click', function () {
         document.getElementById('sidebar').classList.toggle('show');
     });

@@ -72,6 +72,30 @@
 
     {{-- Tabel Laporan --}}
     <div class="col-lg-9">
+        {{-- Ringkasan --}}
+        <div class="row g-3 mb-3">
+            <div class="col-4">
+                <div class="table-card p-3 text-center">
+                    <div class="small text-muted mb-1">Total Transaksi</div>
+                    <div class="fw-700 fs-5" style="font-weight:700;color:#1e3a5f;">{{ number_format($totalTransactions) }}</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="table-card p-3 text-center">
+                    <div class="small text-muted mb-1">Sudah Dikembalikan</div>
+                    <div class="fw-700 fs-5" style="font-weight:700;color:#2e7d32;">{{ number_format($totalReturned) }}</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="table-card p-3 text-center">
+                    <div class="small text-muted mb-1">Total Denda Terkumpul</div>
+                    <div class="fw-700" style="font-weight:700;color:#c62828;font-size:1rem;">
+                        Rp {{ number_format($totalFine, 0, ',', '.') }}
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="table-card">
             <div class="p-3 border-bottom d-flex align-items-center justify-content-between">
                 <h6 class="fw-700 mb-0" style="font-weight:700;color:#1e3a5f;">
@@ -129,6 +153,28 @@
                         </tr>
                         @endforelse
                     </tbody>
+                    @if($loans->total() > 0 && $totalFine > 0)
+                    <tfoot>
+                        <tr style="background:#fff8e1;">
+                            <td colspan="7" class="text-end fw-600 py-2 px-3" style="font-weight:600;font-size:.85rem;">
+                                <i class="bi bi-cash-stack me-1 text-warning"></i>
+                                Total Denda (halaman ini):
+                            </td>
+                            <td class="fw-700 py-2 px-3" style="font-weight:700;color:#c62828;font-size:.85rem;">
+                                Rp {{ number_format($loans->sum('fine'), 0, ',', '.') }}
+                            </td>
+                        </tr>
+                        <tr style="background:#fce4ec;">
+                            <td colspan="7" class="text-end fw-600 py-2 px-3" style="font-weight:600;font-size:.85rem;">
+                                <i class="bi bi-cash-coin me-1 text-danger"></i>
+                                Total Denda Keseluruhan (semua filter):
+                            </td>
+                            <td class="fw-700 py-2 px-3" style="font-weight:700;color:#c62828;font-size:.9rem;">
+                                Rp {{ number_format($totalFine, 0, ',', '.') }}
+                            </td>
+                        </tr>
+                    </tfoot>
+                    @endif
                 </table>
             </div>
             @if($loans->hasPages())

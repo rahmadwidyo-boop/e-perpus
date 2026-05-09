@@ -23,6 +23,16 @@ class DashboardController extends Controller
 
         $totalLate = Loan::where('status', 'terlambat')->count();
 
+        // Total denda yang sudah dibayar (status dikembalikan dan ada denda)
+        $totalFineCollected = Loan::where('status', 'dikembalikan')
+            ->where('fine', '>', 0)
+            ->sum('fine');
+
+        // Total denda yang masih berjalan (belum dikembalikan, terlambat)
+        $totalFinePending = Loan::where('status', 'terlambat')
+            ->get()
+            ->sum('calculated_fine');
+
         // Daftar siswa yang sedang meminjam
         $activeLoans = Loan::with(['student', 'book'])
             ->whereIn('status', ['dipinjam', 'terlambat'])
@@ -64,6 +74,7 @@ class DashboardController extends Controller
 
         return view('dashboard', compact(
             'totalBooks', 'totalStudents', 'totalLoaned', 'totalLate',
+            'totalFineCollected', 'totalFinePending',
             'activeLoans', 'lateLoans', 'chartLabels', 'chartData'
         ));
     }

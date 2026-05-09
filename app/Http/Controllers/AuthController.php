@@ -10,6 +10,9 @@ class AuthController extends Controller
     public function showLogin()
     {
         if (Auth::check()) {
+            if (Auth::user()->isSuperAdmin()) {
+                return redirect()->route('superadmin.dashboard');
+            }
             return redirect()->route('dashboard');
         }
         return view('auth.login');
@@ -24,6 +27,11 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+
+            // Cek verifikasi email dihapus sementara (SMTP diblokir ISP)
+            if (Auth::user()->isSuperAdmin()) {
+                return redirect()->intended(route('superadmin.dashboard'));
+            }
             return redirect()->intended(route('dashboard'));
         }
 

@@ -26,15 +26,12 @@ class LoansExport implements FromCollection, WithHeadings, WithMapping, WithStyl
         if (!empty($this->filters['status'])) {
             $query->where('status', $this->filters['status']);
         }
-
         if (!empty($this->filters['start_date'])) {
             $query->whereDate('loan_date', '>=', $this->filters['start_date']);
         }
-
         if (!empty($this->filters['end_date'])) {
             $query->whereDate('loan_date', '<=', $this->filters['end_date']);
         }
-
         if (!empty($this->filters['month']) && !empty($this->filters['year'])) {
             $query->whereMonth('loan_date', $this->filters['month'])
                   ->whereYear('loan_date', $this->filters['year']);
@@ -68,6 +65,14 @@ class LoansExport implements FromCollection, WithHeadings, WithMapping, WithStyl
     public function map($loan): array
     {
         self::$row++;
+
+        // Hitung denda: jika sudah dikembalikan pakai kolom fine,
+        // jika masih terlambat hitung dari hari ini
+        $fine = $loan->fine;
+        if ($loan->status === 'terlambat' && $fine == 0) {
+            $fine = $loan->calculated_fine;
+        }
+
         return [
             self::$row,
             $loan->code,
@@ -80,7 +85,7 @@ class LoansExport implements FromCollection, WithHeadings, WithMapping, WithStyl
             $loan->due_date?->format('d/m/Y'),
             $loan->return_date?->format('d/m/Y') ?? '-',
             ucfirst($loan->status),
-            number_format($loan->fine, 0, ',', '.'),
+            $fine > 0 ? 'Rp ' . number_format($fine, 0, ',', '.') : '-',
         ];
     }
 

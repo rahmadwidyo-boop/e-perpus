@@ -9,10 +9,74 @@
 
 @section('content')
 
+{{-- Subscription Widget --}}
+@php
+    $school = Auth::user()->school;
+@endphp
+@if($school)
+    @php
+        $daysLeft  = $school->daysRemaining();
+        $subStatus = $school->subscription_status;
+    @endphp
+    @if(in_array($subStatus, ['expired', 'suspended']))
+        <div class="alert d-flex align-items-center justify-content-between gap-3 mb-4"
+             style="background:#f8d7da;border:1px solid #f5c2c7;border-radius:12px;" role="alert">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill text-danger fs-5"></i>
+                <div>
+                    <div class="fw-600" style="font-weight:600;color:#842029;">
+                        Langganan {{ $subStatus === 'suspended' ? 'Disuspend' : 'Telah Habis' }}
+                    </div>
+                    <div class="small text-danger">
+                        Akses fitur perpustakaan dibatasi. Silakan perpanjang langganan Anda.
+                    </div>
+                </div>
+            </div>
+            <a href="{{ route('subscription.info') }}" class="btn btn-sm px-3 flex-shrink-0"
+               style="background:#842029;color:#fff;border-radius:8px;font-weight:600;white-space:nowrap;">
+                <i class="bi bi-credit-card me-1"></i>Perpanjang
+            </a>
+        </div>
+    @elseif($daysLeft <= 7)
+        <div class="alert d-flex align-items-center justify-content-between gap-3 mb-4"
+             style="background:#fff3cd;border:1px solid #ffe082;border-radius:12px;" role="alert">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-exclamation-triangle-fill" style="color:#856404;font-size:1.2rem;"></i>
+                <div>
+                    <div class="fw-600" style="font-weight:600;color:#856404;">
+                        {{ $subStatus === 'trial' ? 'Trial' : 'Langganan' }} hampir berakhir!
+                    </div>
+                    <div class="small" style="color:#856404;">
+                        Sisa <strong>{{ $daysLeft }} hari</strong> lagi. Segera perpanjang agar tidak kehilangan akses.
+                    </div>
+                </div>
+            </div>
+            <a href="{{ route('subscription.info') }}" class="btn btn-sm px-3 flex-shrink-0"
+               style="background:#856404;color:#fff;border-radius:8px;font-weight:600;white-space:nowrap;">
+                <i class="bi bi-credit-card me-1"></i>Perpanjang
+            </a>
+        </div>
+    @else
+        <div class="d-flex align-items-center justify-content-between p-3 mb-4 rounded-3"
+             style="background:#d1e7dd;border:1px solid #a3cfbb;">
+            <div class="d-flex align-items-center gap-2">
+                <i class="bi bi-check-circle-fill" style="color:#0f5132;font-size:1.1rem;"></i>
+                <div class="small" style="color:#0f5132;">
+                    <strong>{{ $subStatus === 'trial' ? 'Trial aktif' : 'Langganan aktif' }}</strong>
+                    — sisa <strong>{{ $daysLeft }} hari</strong>
+                </div>
+            </div>
+            <a href="{{ route('subscription.info') }}" class="small" style="color:#0f5132;font-weight:600;">
+                Detail <i class="bi bi-arrow-right ms-1"></i>
+            </a>
+        </div>
+    @endif
+@endif
+
 {{-- Stat Cards --}}
 <div class="row g-3 mb-4">
     <div class="col-6 col-lg-3">
-        <div class="stat-card bg-white">
+        <div class="stat-card bg-white h-100">
             <div class="icon-box" style="background:#e8f0fe;">
                 <i class="bi bi-journal-bookmark-fill" style="color:#1e3a5f;"></i>
             </div>
@@ -23,7 +87,7 @@
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card bg-white">
+        <div class="stat-card bg-white h-100">
             <div class="icon-box" style="background:#e8f5e9;">
                 <i class="bi bi-people-fill" style="color:#2e7d32;"></i>
             </div>
@@ -34,7 +98,7 @@
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card bg-white">
+        <div class="stat-card bg-white h-100">
             <div class="icon-box" style="background:#fff8e1;">
                 <i class="bi bi-arrow-left-right" style="color:#f57f17;"></i>
             </div>
@@ -45,7 +109,7 @@
         </div>
     </div>
     <div class="col-6 col-lg-3">
-        <div class="stat-card bg-white">
+        <div class="stat-card bg-white h-100">
             <div class="icon-box" style="background:#fce4ec;">
                 <i class="bi bi-exclamation-triangle-fill" style="color:#c62828;"></i>
             </div>

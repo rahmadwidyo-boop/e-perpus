@@ -2,17 +2,36 @@
 
 namespace App\Models;
 
+use App\Models\Scopes\TenantScope;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class Book extends Model
 {
     use HasFactory;
 
     protected $fillable = [
+        'school_id',
         'code', 'title', 'category', 'author',
         'publisher', 'publish_year', 'shelf', 'stock', 'cover',
     ];
+
+    protected static function booted(): void
+    {
+        static::addGlobalScope(new TenantScope());
+
+        static::creating(function ($model) {
+            if (app()->bound('current_school_id') && empty($model->school_id)) {
+                $model->school_id = app()->make('current_school_id');
+            }
+        });
+    }
+
+    public function school(): BelongsTo
+    {
+        return $this->belongsTo(School::class);
+    }
 
     public function loans()
     {
