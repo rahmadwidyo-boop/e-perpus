@@ -18,17 +18,19 @@ class SuperAdminSeeder extends Seeder
         User::updateOrCreate(
             ['email' => 'superadmin@eperpus.com'],
             [
-                'name'      => 'Super Admin',
-                'password'  => Hash::make('superadmin123'),
-                'role'      => 'super_admin',
-                'school_id' => null,
+                'name'               => 'Super Admin',
+                'password'           => Hash::make('superadmin123'),
+                'role'               => 'super_admin',
+                'school_id'          => null,
+                'email_verified_at'  => now(),
             ]
         );
 
         // Update akun admin existing: jadikan school_admin dengan school_id default
         User::where('email', 'admin@eperpus.com')->update([
-            'role'      => 'school_admin',
-            'school_id' => $defaultSchool->id,
+            'role'               => 'school_admin',
+            'school_id'          => $defaultSchool->id,
+            'email_verified_at'  => now(),
         ]);
 
         $this->command->info("SuperAdminSeeder: super_admin dibuat, admin@eperpus.com diupdate ke school_admin (school_id={$defaultSchool->id}).");

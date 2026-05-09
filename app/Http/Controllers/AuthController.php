@@ -39,6 +39,11 @@ class AuthController extends Controller
             RateLimiter::clear($this->throttleKey($request));
             $request->session()->regenerate();
 
+            // Cek verifikasi email (kecuali super_admin)
+            if (!Auth::user()->isSuperAdmin() && !Auth::user()->hasVerifiedEmail()) {
+                return redirect()->route('verification.notice');
+            }
+
             if (Auth::user()->isSuperAdmin()) {
                 return redirect()->intended(route('superadmin.dashboard'));
             }

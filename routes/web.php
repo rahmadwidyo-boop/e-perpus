@@ -47,7 +47,7 @@ Route::middleware('auth')->group(function () {
 
 // ── School Admin ──────────────────────────────────────────────────────────────
 // Route subscription TIDAK pakai middleware subscription (agar bisa diakses saat expired)
-Route::middleware(['auth', 'tenant'])->group(function () {
+Route::middleware(['auth', 'verified', 'tenant'])->group(function () {
     Route::get('/subscription/info', [SubscriptionController::class, 'info'])->name('subscription.info');
     Route::get('/subscription/payment', [SubscriptionController::class, 'paymentForm'])->name('subscription.payment');
     Route::post('/subscription/payment', [SubscriptionController::class, 'submitPayment'])->name('subscription.submit');
@@ -55,7 +55,7 @@ Route::middleware(['auth', 'tenant'])->group(function () {
 });
 
 // Route perpustakaan PAKAI middleware subscription
-Route::middleware(['auth', 'tenant', 'subscription'])->group(function () {
+Route::middleware(['auth', 'verified', 'tenant', 'subscription'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     // Manajemen Buku
@@ -80,7 +80,7 @@ Route::middleware(['auth', 'tenant', 'subscription'])->group(function () {
 });
 
 // ── Super Admin ───────────────────────────────────────────────────────────────
-Route::middleware(['auth', 'role:super_admin'])->prefix('superadmin')->name('superadmin.')->group(function () {
+Route::middleware(['auth', 'verified', 'role:super_admin'])->prefix('superadmin')->name('superadmin.')->group(function () {
     Route::get('/dashboard', [SuperAdminDashboardController::class, 'index'])->name('dashboard');
     Route::get('/schools', [SuperAdminSchoolController::class, 'index'])->name('schools.index');
     Route::patch('/schools/{school}/status', [SuperAdminSchoolController::class, 'updateStatus'])->name('schools.updateStatus');

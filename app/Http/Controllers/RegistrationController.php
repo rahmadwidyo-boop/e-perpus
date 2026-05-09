@@ -70,7 +70,10 @@ class RegistrationController extends Controller
         // Login dulu agar bisa kirim email verifikasi
         Auth::login($user);
 
-        return redirect()->route('dashboard')
-            ->with('success', 'Pendaftaran berhasil! Selamat datang di E-Perpustakaan.');
+        // Kirim email verifikasi
+        $user->sendEmailVerificationNotification();
+
+        return redirect()->route('verification.notice')
+            ->with('success', 'Pendaftaran berhasil! Silakan cek email Anda untuk verifikasi akun.');
     }
 }
