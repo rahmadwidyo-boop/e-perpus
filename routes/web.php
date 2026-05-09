@@ -20,10 +20,10 @@ use Illuminate\Support\Facades\Route;
 // ── Publik ────────────────────────────────────────────────────────────────────
 Route::get('/', [LandingController::class, 'index'])->name('landing');
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:10,1')->name('login.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 Route::get('/register', [RegistrationController::class, 'show'])->name('register');
-Route::post('/register', [RegistrationController::class, 'store'])->name('register.store');
+Route::post('/register', [RegistrationController::class, 'store'])->middleware('throttle:5,1')->name('register.store');
 
 // ── Verifikasi Email ──────────────────────────────────────────────────────────
 Route::middleware('auth')->group(function () {
