@@ -7,6 +7,15 @@
     "license": "MIT",
     "require": {
         "php": "^8.2",
+        "ext-gd": "*",
+        "ext-zip": "*",
+        "ext-pdo": "*",
+        "ext-mbstring": "*",
+        "ext-xml": "*",
+        "ext-curl": "*",
+        "ext-bcmath": "*",
+        "ext-tokenizer": "*",
+        "ext-fileinfo": "*",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "maatwebsite/excel": "^3.1"
